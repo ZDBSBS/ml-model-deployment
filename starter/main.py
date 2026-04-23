@@ -3,8 +3,18 @@ from fastapi import FastAPI
 from pydantic import BaseModel, Field
 import pandas as pd
 import joblib
-from .starter.ml.data import process_data
-from .starter.ml.model import inference
+
+import sys
+from pathlib import Path
+
+# Make sure project root is on PYTHONPATH (for sanitycheck compatibility)
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from starter.starter.ml.data import process_data
+from starter.starter.ml.model import inference
+
 
 # Initialize FastAPI app
 app = FastAPI(title="ML Model Inference API")
