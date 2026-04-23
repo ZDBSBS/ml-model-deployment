@@ -57,3 +57,28 @@ precision, recall, fbeta = compute_model_metrics(y_test, preds)
 print(f"Precision: {precision}")
 print(f"Recall: {recall}")
 print(f"F1: {fbeta}")
+
+# Compute performance on slices of the data
+slice_feature = "education"
+
+with open("slice_output.txt", "w") as f:
+    for value in test[slice_feature].unique():
+        slice_data = test[test[slice_feature] == value]
+
+        X_slice, y_slice, _, _ = process_data(
+            slice_data,
+            categorical_features=cat_features,
+            label="salary",
+            training=False,
+            encoder=encoder,
+            lb=lb,
+        )
+
+        preds_slice = inference(model, X_slice)
+        precision, recall, fbeta = compute_model_metrics(y_slice, preds_slice)
+
+        f.write(f"Slice: {slice_feature} = {value}\n")
+        f.write(f"Precision: {precision}\n")
+        f.write(f"Recall: {recall}\n")
+        f.write(f"F1: {fbeta}\n")
+        f.write("-" * 40 + "\n")
